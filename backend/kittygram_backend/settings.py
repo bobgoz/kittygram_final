@@ -11,6 +11,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'localhost',
     'kittygram-bobgoz.duckdns.org',
+    '0.0.0.0',
 ]
 
 INSTALLED_APPS = [
