@@ -27,7 +27,8 @@ services:
     image: bobgoze/kittygram_gateway
     env_file: .env
     ports:
-      - 9000:80
+      - "${GATEWAY_CONTAINER_PORT}:${GATEWAY_HOST_PORT}"
+
     volumes:
       - static:/static
       - media:/media
