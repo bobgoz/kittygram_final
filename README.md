@@ -1,49 +1,94 @@
-# KittyGram
+# Kittygram - социальная сеть для любителей котиков
 
 ## Описание приложения
-KittyGram — это социальная платформа для любителей кошек, позволяющая авторизованным пользователям публиковать фотографии своих питомцев. Приложение предоставляет закрытое сообщество, где все материалы доступны только после регистрации и входа в систему.
-
-Основные функции:
-- Защищённая авторизация пользователей
-- Загрузка и хранение фотографий котиков
+Kittygram - это социальная платформа для публикации фотографий кошек. Основные возможности:
+- Публикация фотографий с описанием
 - Просмотр ленты публикаций
-- Управление собственными постами
+- Регистрация и авторизация пользователей
+- Личный кабинет для управления своими публикациями
+
+Доступ к контенту имеют только авторизованные пользователи. Приложение реализовано как микросервисная архитектура, работающая в Docker-контейнерах.
 
 ## Необходимые инструменты
-Для запуска проекта потребуется:
-- Docker (версия 20.10.0 или выше)
-- Docker Compose (версия 1.29.0 или выше)
-- Python 3.8+
-- Node.js 14+ (для фронтенд-сборки)
+Для работы с проектом потребуется:
+- Docker 20.10+
+- Docker Compose 1.29+
+- Python 3.9+
+- Node.js 18+
+- Git
 
 ## Установка и запуск
 
-### 1. Клонирование репозитория
-```bash
-git clone https://github.com/bobgoz/kittygram.git
-cd kittygram
+### Локальная разработка
+1. Клонировать репозиторий:
+   ```
+   git clone https://github.com/bobgoz/kittygram.git
+   ```
+   ```
+   cd kittygram
+   ```
+2. Создать и заполнить .env файлы:
+
+```
+cp .env.example .env
+```
+```
+cp frontend/.env.example frontend/.env
+```
+3. Запустить контейнеры:
+
+```
+docker-compose up -d --build
 ```
 
-### 2. Настройка окружения
-Создайте файл .env в корне проекта:
-```
-POSTGRES_DB=kittygram
-POSTGRES_USER=kittygram_user
-POSTGRES_PASSWORD=your_secure_password
-SECRET_KEY=your_django_secret_key
-DEBUG=False
-ALLOWED_HOSTS=kittygram-bobgoz.duckdns.org,localhost
-```
-
-### 3. Запуск контейнеров
-```
-docker-compose -f docker-compose.production.yml up --build -d
-```
-
-### 4. Применение миграций
+4. Применить миграции:
 ```
 docker-compose exec backend python manage.py migrate
 ```
 
-### 5. Сборка статики
+5. Собрать статику:
+```
+docker-compose exec backend python manage.py collectstatic
+```
 
+Приложение будет доступно по адресу: http://localhost:80
+
+### Продакшен-развертывание
+Для развертывания на сервере используется CI/CD pipeline:
+
+При push в ветку main автоматически запускаются тесты
+
+Успешное прохождение тестов инициирует сборку Docker-образов
+
+Образы публикуются в Docker Hub
+
+Происходит автоматический деплой на сервер
+
+Развернутая версия приложения доступна по адресу:
+```
+https://kittygram-bobgoz.duckdns.org/
+```
+# Используемые технологии
+Backend
+- Python 3.9
+- Django 3.2
+- Django REST Framework 3.12
+- Djoser 2.1 (аутентификация)
+- PostgreSQL 13
+- Gunicorn
+- Nginx (gateway)
+
+Frontend
+- React
+- Bootstrap
+
+Инфраструктура
+- Docker
+- Docker Compose
+- GitHub Actions (CI/CD)
+
+Автор
+Проект разработан bobgoz
+
+Лицензия
+MIT License
